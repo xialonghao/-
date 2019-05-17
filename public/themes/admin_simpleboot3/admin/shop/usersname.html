@@ -1,0 +1,85 @@
+<include file="public@header"/>
+</head>
+<body>
+<div class="wrap">
+    <ul class="nav nav-tabs">
+        <li class="active"><a>{:lang('USER_INDEXADMIN_INDEX')}</a></li>
+    </ul>
+    <form class="well form-inline margin-top-20" method="get" action="{:url('shop/usersname')}">
+        手机号:
+        <input type="text" class="form-control" name="mobile" style="width: 120px;" value="{:input('request.mobile/s','')}" placeholder="请输入手机号">
+        邮箱:
+        <input type="text" class="form-control" name="user_email" style="width: 120px;" value="{:input('request.email/s','')}" placeholder="请输入{:lang('EMAIL')}">
+        <input type="submit" class="btn btn-primary" value="搜索" />
+        <a class="btn btn-danger" href="{:url('User/index')}">清空</a>
+
+    </form>
+
+    <a id="daochu"><input type="submit" class="btn btn-primary" value="导出"/></a>
+    <form method="post" class="js-ajax-form">
+        <table class="table table-hover table-bordered">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>微信昵称</th>
+                <th>微信头像</th>
+                <th>真实姓名</th>
+                <th>邮箱</th>
+                <th>公司名称</th>
+                <th>手机号</th>
+                <th>用户地址</th>
+            </tr>
+            </thead>
+            <tbody>
+            <foreach name="res" item="vo">
+                <tr>
+                    <td>{$vo.Id}</td>
+                    <td>{$vo.nickname}</td>
+                    <td><img src="{$vo.headimgurl}" style="width: 50px; height: 50px"></td>
+                    <td>{$vo.username}</td>
+                    <td>{$vo.email}</td>
+                    <td>{$vo.company_name}</td>
+                    <td>{$vo.mobile}</td>
+                    <td>{$vo.address}</td>
+                </tr>
+            </foreach>
+            </tbody>
+        </table>
+        <div class="pagination">{$page}</div>
+    </form>
+</div>
+<script src="__STATIC__/js/admin.js"></script>
+<!--<script>-->
+    <!--$('#daochu').click(function(){-->
+        <!--$.ajax({-->
+            <!--url:"{:url('shop/extcel')}",-->
+            <!--type:'POST',-->
+            <!--success:function(res){-->
+                <!--console.log(res);-->
+            <!--}-->
+        <!--})-->
+    <!--})-->
+<!--</script>-->
+<script>
+
+    // 使用outerHTML属性获取整个table元素的HTML代码（包括<table>标签），然后包装成一个完整的HTML文档，设置charset为urf-8以防止中文乱码
+    var html = "<html><head><meta charset='utf-8' />" +
+        ' <style type="text/css">' +
+        'table td {' +
+        // 'border: 1px solid #000000;' +
+        'width: 200px;' +
+        'height: 150px;' +
+        ' text-align: center;' +
+        ' }' +
+        '</style>'+
+        "</head><body>" + document.getElementsByTagName("table")[0].outerHTML + "</body></html>";
+    // 实例化一个Blob对象，其构造函数的第一个参数是包含文件内容的数组，第二个参数是包含文件类型属性的对象
+    var blob = new Blob([html], { type: "application/vnd.ms-excel" });
+    var a = document.querySelector("#daochu");
+    // 利用URL.createObjectURL()方法为a元素生成blob URL
+    a.href = URL.createObjectURL(blob);
+    // 设置文件名
+    a.download = "会员表格.xls";
+</script>
+</body>
+</html>
